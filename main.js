@@ -2,6 +2,8 @@
  * Created by airrex on 12/11/15.
  */
 
+var csv = require('fast-csv');
+
 // The `questions.csv` file contains a mini-taxonomy.
 // This taxonomy consists of __Strands__, __Standards__, and __Questions__.
 // Strands have many Standards, and Standards have many Questions.
@@ -33,6 +35,20 @@ var begin = function() {
   } else {
     var questions = parseInt(userInput);
     console.log('You have asked for a ', (typeof questions), ' of questions.');
+
+    var datas = [];
+    csv
+      .fromPath("questions.csv")
+      .on("data", function(data){
+        //console.log(data);
+        datas.push(data);
+      })
+      .on("end", function(){
+        console.log("#####");
+        console.log(datas);
+        console.log("#####");
+      });
+
   }
 
   // Output should display a list of question_ids

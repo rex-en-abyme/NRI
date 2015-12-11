@@ -1,0 +1,14 @@
+{
+  "name": "nri_be",
+  "version": "1.0.0",
+  "description": "Rex Suter NoRedInk",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-csv": "^0.1.2"
+  }
+}
