@@ -10,7 +10,7 @@ We base our decision on a number of factors:
   * Pedagogical hierarchy
     ...and more
 
-We have simplifed this problem so that you can actually get something done in a few hours.
+We have simplified this problem so that you can actually get something done in a few hours.
 
 ## Ruby Take-Home Challenge
 
