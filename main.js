@@ -3,6 +3,7 @@
  */
 
 var csv = require('fast-csv');
+var _ = require('underscore');
 
 // The `questions.csv` file contains a mini-taxonomy.
 // This taxonomy consists of __Strands__, __Standards__, and __Questions__.
@@ -31,22 +32,39 @@ var begin = function() {
   var userInput = process.argv[2];
 
   if( userInput === void 0 || isNaN(userInput) || userInput === '0') {
-    console.log('Please enter an integer value greater than zero and try again!');
-  } else {
+  //  console.log('Please enter an integer value greater than zero and try again!');
+  //} else {
     var questions = parseInt(userInput);
     console.log('You have asked for a ', (typeof questions), ' of questions.');
 
-    var datas = [];
+    var questions = {}, header = true;
     csv
       .fromPath("questions.csv")
       .on("data", function(data){
-        //console.log(data);
-        datas.push(data);
+        if(header === true) {
+
+          questions['headersIndices'] = {};
+
+          _.each(data, function(item, idx, col) {
+            questions[item] = [];
+            questions['headersIndices'][idx] = item;
+          });
+
+          header = false;
+
+        } else {
+
+          _.each(data, function(item, idx, col) {
+            var key = questions['headersIndices'][idx];
+            questions[key].push(item);
+          });
+
+        }
       })
       .on("end", function(){
-        console.log("#####");
-        console.log(datas);
-        console.log("#####");
+
+        console.log(questions);
+
       });
 
   }
