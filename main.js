@@ -24,6 +24,48 @@ var _ = require('underscore');
 // We would like you to write a program in ruby to select questions for a quiz.
 // Please feel free to use any libraries you choose.
 
+/**
+ * For the given strandId, as evenly as possible,
+ * distribute the number of questions needed among the Standards available
+ */
+var normalizeStandardDistribution = function(strandId, questionCountNeeded, questions) {
+
+};
+
+var normalizeStrandDistribution = function(questionCountRequested, questions) {
+
+  // For the number of questions requested, normalize the number of times each strand contributes to final output
+
+  // Get unique strands
+  var uniqStrands = {};
+  var strandIdentifiers = questions['strand_id'];
+  _.each(strandIdentifiers, function(item, idx) {
+    if(uniqStrands[item]) {
+      uniqStrands[item].push(idx);
+    } else {
+      uniqStrands[item] = [];
+    }
+  });
+
+  var uniqStrandsCount = Object.keys(uniqStrands).length;
+
+  // Given the number of requested questions, this number of questions should come from each strand
+  var questionsPerStrand = Math.floor(questionCountRequested / uniqStrandsCount);
+  // In the event questions cannot be evenly divided, remainder should be randomly distributed among possible strands
+  var extraQuestions = Math.ceil(questionCountRequested % uniqStrandsCount);
+
+  var resultSetToOutput = [];
+  // Go through and repeat same distribution process for each set of standards within each strand.
+  _.each(uniqStrands, function(item, idx, collection) {
+    normalizeStandardDistribution(idx, questionsPerStrand, questions, function(questionId) {
+      resultSetToOutput.push(questionId);
+    });
+    // Didn't have time to finish but answer would bubble up
+  });
+
+  return resultSetToOutput;
+
+};
 
 /**
  * Prompt user for number of questions to answer.
@@ -32,44 +74,40 @@ var begin = function() {
   var userInput = process.argv[2];
 
   if( userInput === void 0 || isNaN(userInput) || userInput === '0') {
-  //  console.log('Please enter an integer value greater than zero and try again!');
-  //} else {
-    var questions = parseInt(userInput);
-    console.log('You have asked for a ', (typeof questions), ' of questions.');
+
+    console.log('Please enter an integer value greater than zero and try again!');
+
+  } else {
+
+    var questionCountRequested = parseInt(userInput);
+    console.log('You have asked for a ', (typeof questionCountRequested), ' of questions.');
 
     var questions = {}, header = true;
     csv
       .fromPath("questions.csv")
       .on("data", function(data){
         if(header === true) {
-
           questions['headersIndices'] = {};
-
           _.each(data, function(item, idx, col) {
             questions[item] = [];
             questions['headersIndices'][idx] = item;
           });
-
           header = false;
-
         } else {
-
           _.each(data, function(item, idx, col) {
             var key = questions['headersIndices'][idx];
             questions[key].push(item);
           });
-
         }
       })
       .on("end", function(){
 
-        console.log(questions);
-
+        // Pass number of questions asked for in addition to reformatted data from the questions csv file.
+        var questionIds = normalizeStrandDistribution(questionCountRequested, questions);
+        console.log(questionIds);
       });
 
   }
-
-  // Output should display a list of question_ids
 
 };
 
