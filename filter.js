@@ -5,7 +5,6 @@ var _ = require('underscore');
 var filter = function(type, requests, data, callback, parentId) {
 
   var ids = null;
-
   if(type === types.strandId) {
     ids = data[types.strandId];
   } else if(type === types.standardId) {

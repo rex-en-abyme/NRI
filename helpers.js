@@ -1,10 +1,14 @@
 var _ = require('underscore');
 
+/**
+ * O(n)
+ */
 function getDistributionPerUnique(requests, data) {
   var output = {};
   var addedCount = 0;
   var iterationsLeft = requests;
   while (iterationsLeft > 0) {
+    //TODO could make non-deterministic by iterating in shuffled order
     _.each(data, function(item, id) {
       if (addedCount >= requests) {
         return output;
@@ -21,15 +25,21 @@ function getDistributionPerUnique(requests, data) {
   return output;
 };
 
-function getIdsFor(strandData, standardData, strandId) {
+/**
+ *  O(n log n)
+ */
+function getIdsFor(typeIds, subtypeIds, strandId) {
   var ids = [];
-  var indicesForStrand = getIndicesFor(strandData, strandId);
-  _.each(indicesForStrand, function(item) {
-    ids.push(standardData[item]);
+  var indicesForStrand = getIndicesFor(typeIds, strandId);
+  _.each(indicesForStrand, function(index) {
+    ids.push(subtypeIds[index]);
   });
   return ids;
 };
 
+/**
+ * O(n)
+ */
 function getIndicesFor(data, id) {
   var indices = [];
   _.each(data, function(item, index) {
@@ -40,6 +50,9 @@ function getIndicesFor(data, id) {
   return indices;
 };
 
+/**
+ * O(n)
+ */
 function getUniques(data) {
   var output = {};
   _.each(data, function(item, index) {
